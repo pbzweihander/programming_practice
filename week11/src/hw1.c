@@ -16,11 +16,11 @@ typedef struct __FRUITNODE{
     struct __FRUITNODE* next;
 } FruitNode;
 
-int sum(FruitNode* root) {
-    if (root->next == NULL)
-        return root->this->count;
+int sum(FruitNode* node) {
+    if (node->next == NULL)
+        return node->this->count;
     else
-        return root->this->count + sum(root->next);
+        return node->this->count + sum(node->next);
 }
 
 void push_inner(FruitNode* node, Fruit* fruit) {
@@ -36,12 +36,12 @@ void push_inner(FruitNode* node, Fruit* fruit) {
 
 BOOL pop_inner(FruitNode* node, Fruit* fruit) {
     if (strcmp(node->this->species, fruit->species) == 0) {
-        if (node->this->count > fruit->count) {
+        if (node->this->count >= fruit->count) {
             node->this->count -= fruit->count;
             return TRUE;
         }
     } else if (node->next != NULL)
-        pop_inner(node->next, fruit);
+        return pop_inner(node->next, fruit);
     return FALSE;
 }
 
@@ -60,7 +60,8 @@ BOOL pop(FruitNode* root, Fruit* fruit) {
 
 void print_box_inner(FruitNode* node) {
     if (node != NULL) {
-        printf("%s %s\n", node->this->species, node->this->count);
+        if (node->this->count > 0)
+            printf("%s %d\n", node->this->species, node->this->count);
         if (node->next != NULL)
             print_box_inner(node->next);
     }
@@ -69,7 +70,7 @@ void print_box_inner(FruitNode* node) {
 void print_box(FruitNode* root) {
     printf("== fruitbox ==\n");
     print_box_inner(root);
-    printf("==========\n");
+    printf("==============\n");
 }
 
 int main(void) {
