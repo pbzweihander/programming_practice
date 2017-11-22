@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define BOOL int
@@ -28,6 +29,7 @@ void push_inner(FruitNode* node, Fruit* fruit) {
     else if (node->next == NULL) {
         node->next = malloc(sizeof(FruitNode));
         node->next->this = fruit;
+        node->next->next = NULL;
     } else
         push_inner(node->next, fruit);
 }
@@ -56,5 +58,56 @@ BOOL pop(FruitNode* root, Fruit* fruit) {
     return pop_inner(root, fruit);
 }
 
+void print_box_inner(FruitNode* node) {
+    if (node != NULL) {
+        printf("%s %s\n", node->this->species, node->this->count);
+        if (node->next != NULL)
+            print_box_inner(node->next);
+    }
+}
+
+void print_box(FruitNode* root) {
+    printf("== fruitbox ==\n");
+    print_box_inner(root);
+    printf("==========\n");
+}
+
 int main(void) {
+    FruitNode* root = NULL;
+    while (TRUE) {
+        char command[4];
+        char species[32];
+        int count;
+        scanf("%s %s %d", command, species, &count);
+        Fruit* fruit = malloc(sizeof(Fruit));
+        strcpy(fruit->species, species);
+        fruit->count = count;
+        if (command[0] == 'i') {
+            BOOL b = FALSE;
+            if (root == NULL) {
+                root = malloc(sizeof(FruitNode));
+                root->this = fruit;
+                root->next = NULL;
+                b = TRUE;
+            } else {
+                b = push(root, fruit);
+            }
+            print_box(root);
+            if (b == FALSE)
+                printf("Box is full\n");
+            printf("\n");
+        }
+        if (command[0] == 'o') {
+            BOOL b = FALSE;
+            if (root == NULL) {
+                b = FALSE;
+            } else {
+                b = pop(root, fruit);
+            }
+            print_box(root);
+            if (b == FALSE)
+                printf("Not enough fruit\n");
+            printf("\n");
+        }
+    }
 }
