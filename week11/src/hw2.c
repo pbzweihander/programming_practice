@@ -5,3 +5,4 @@ typedef struct {
     int imaginary;
 } dc;
 
+// use sscanf!
