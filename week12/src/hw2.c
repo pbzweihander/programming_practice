@@ -63,29 +63,62 @@ Student* sort_and_merge(Student* a, Student* b, int (*comparer)(Student*, Studen
         return a;
     if (comparer(a, b) <= 0) {
         result = a;
-        result-> next = merge(a->next, b, comparer);
+        result-> next = sort_and_merge(a->next, b, comparer);
     } else {
         result = b;
-        result-> next = merge(a, b->next, comparer);
+        result-> next = sort_and_merge(a, b->next, comparer);
     }
 
     return result;
 }
 
-void split(Student* from, Student** a, Student** b) {
+void split_before_sort(Student* from, Student** a, Student** b) {
     Student* fast;
     Student* slow;
 
-    // TODO: top down split
+    if (from == NULL || from->next == NULL) {
+        *a = from;
+        *b = NULL;
+    } else {
+        slow = from;
+        fast = from->next;
+
+        while (fast != NULL) {
+            fast = fast->next;
+            if (fast != NULL) {
+                slow = slow->next;
+                fast = fast->next;
+            }
+        }
+
+        *a = from;
+        *b = slow->next;
+        slow->next = NULL;
+    }
+}
+
+Student* merge_sort(Student* head, int (*comparer)(Student*, Student*)) {
+    Student* a;
+    Student* b;
+
+    if (head == NULL || head->next == NULL)
+        return head;
+
+    split_before_sort(head, &a, &b);
+
+    a = merge_sort(a, comparer);
+    b = merge_sort(b, comparer);
+
+    return sort_and_merge(a, b, comparer);
 }
 
 Student* sort_by_name(Student* root) {
-    // TODO: sort by name
+    return merge_sort(root, *compare_by_name);
 }
 
 
 Student* sort_by_score(Student* root) {
-    // TODO: sort by score
+    return merge_sort(root, *compare_by_score);
 }
 
 int main(void) {
