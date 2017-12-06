@@ -121,6 +121,17 @@ Student* sort_by_score(Student* root) {
     return merge_sort(root, *compare_by_score);
 }
 
+void print(Student* root) {
+    Student* cursor = root;
+    while (cursor != NULL) {
+        printf("%s(%d)", cursor->name, cursor->score);
+        if (cursor->next != NULL)
+            printf(" -> ");
+        cursor = cursor->next;
+    }
+    printf("\n");
+}
+
 int main(void) {
     Student* root = NULL;
 
@@ -131,7 +142,24 @@ int main(void) {
         if (strcmp(command, "insert") == 0) {
             char name[20];
             int score;
-
-        }
+            scanf("%s %d", name, &score);
+            Student s;
+            strcpy(s.name, name);
+            s.score = score;
+            root = insert(root, s);
+        } else if (strcmp(command, "delete") == 0) {
+            char name[20];
+            scanf("%s", name);
+            root = delete(root, name);
+        } else if (strcmp(command, "print") == 0)
+            print(root);
+        else if (strcmp(command, "sort1") == 0) {
+            root = sort_by_name(root);
+            print(root);
+        } else if (strcmp(command, "sort2") == 0) {
+            root = sort_by_score(root);
+            print(root);
+        } else if (strcmp(command, "exit") == 0)
+            return 0;
     }
 }
