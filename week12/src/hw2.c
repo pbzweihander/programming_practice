@@ -122,5 +122,16 @@ Student* sort_by_score(Student* root) {
 }
 
 int main(void) {
-    // TODO: main
+    Student* root = NULL;
+
+    char command[8];
+    while (1) {
+        printf("Input:\n");
+        scanf("%s", command);
+        if (strcmp(command, "insert") == 0) {
+            char name[20];
+            int score;
+
+        }
+    }
 }
